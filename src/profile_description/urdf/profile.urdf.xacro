@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot name="profile" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- 可选参数：父链接、安装位姿、mesh 缩放（mm->m 时 0.001） -->
+  <xacro:macro name="profile" params="
+      parent:=base_link
+      xyz:='0 0 0'
+      rpy:='0 0 0'
+      scale:='0.001 0.001 0.001'">
+
+    <!-- 固定关节把结构件挂到机器人父链接 -->
+    <joint name="profile_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="profile"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+
+    <!-- 定义 profile 链接 -->
+    <link name="profile">
+      <!-- 使用原来的惯量（也可先简化） -->
+      <inertial>
+        <origin xyz="1.98465691763211E-05 0.188450942047454 -0.00589950655864024" rpy="0 0 0"/>
+        <mass value="13.0474688923859"/>
+        <inertia 
+          ixx="0.690590750372896" 
+          ixy="4.45960015052341E-05" 
+          ixz="-3.66728311393218E-06" 
+          iyy="0.88343837739809" 
+          iyz="0.0134501389115998" 
+          izz="0.484102316400919"/>
+      </inertial>
+
+      <!-- 定义可视化 -->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://profile_description/meshes/profile.STL" scale="${scale}"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1 1 1 1"/>
+        </material>
+      </visual>
+
+      <!-- 定义碰撞模型 -->
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://profile_description/meshes/profile.STL" scale="${scale}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Gazebo 外观/物理可在此设置（可选） -->
+    <gazebo reference="profile">
+      <!-- 例：改个可见材质 -->
+      <material>Gazebo/Grey</material>
+      <!-- 如果这是个机身结构，应保持受重力 -->
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
